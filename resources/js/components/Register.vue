@@ -44,7 +44,7 @@
                 </div>
                 <button type="submit"  class="btn btn-primary w-100 mt-4">Registriraj se</button>
                 <div v-if="successReg" class="alert alert-success mt-3" role="alert">
-                    {{poruka}}
+                    {{poruka}} <a href="/login">Prijava</a>
                 </div>
             </form>
 
