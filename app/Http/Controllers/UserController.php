@@ -41,4 +41,30 @@ class UserController extends Controller
 
         return response()->json(['poruka' => 'Uspjesna registracija']);
     }
+
+    public function logUser(Request $request)
+    {
+        $data = $request->validate(
+            [
+                'email' => 'required|email',
+                'email' => 'required',
+                'password' => 'required',
+
+            ],
+            [
+                'email.email' => 'Unesite ispravan format email adrese.',
+                'email.required' => 'Niste unijeli vas email',
+                'password.required' => 'Niste unijeli vasu lozinku'
+            ]
+        );
+
+        $isExist = $request->only('email', 'password');
+        if (Auth::attempt($isExist)) {  /* provjerava da li korisnik postoji u bazi podataka */
+
+            return response()->json(['poruka' => 'Uspješna prijava']);
+        } else {
+            // Neuspješna prijava
+            return response()->json(['poruka' => 'Neuspješna prijava']);
+        }
+    }
 }
