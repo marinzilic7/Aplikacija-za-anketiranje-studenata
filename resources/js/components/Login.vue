@@ -47,7 +47,7 @@
                             {{ poruka }} <a href="/login">Prijava</a>
                         </div>
                         <div v-if="falseReg" class="mt-3">
-                            <p class="alert alert-danger">{{ falseRegMessage }}</p>
+                            <p class="alert alert-danger">Pogresan email ili lozinka</p>
                         </div>
                     </form>
                 </div>
@@ -102,7 +102,7 @@ export default {
                         this.$router.push("/");
                     }else{
                         this.falseReg = true;
-                        this.falseRegMessage = this.loginMessage
+
                     }
                 })
                 .catch((error) => {
