@@ -1,48 +1,58 @@
 <template>
-    <div class="container mt-5 w-25">
-        <div class="border-round p-5 bg-light">
-            <form @submit.prevent="logUser" method="POST">
-                <input type="hidden" v-model="this.POST" />
-                <input type="hidden" name="" v-model="this.csrfToken" />
+    <div class="my-component">
+        <div class="container mt-5 ">
+        <div class="row">
+            <div class="col-12 col-md-8 offset-md-3 col-lg-6  offset-lg-3 ">
+                <div class="border-round p-5 bg-light ">
+                    <form @submit.prevent="logUser" method="POST">
+                        <input type="hidden" v-model="this.POST" />
+                        <input type="hidden" name="" v-model="this.csrfToken" />
 
-                <div class="form-floating mb-3">
-                    <input
-                        type="email"
-                        class="form-control"
-                        id="floatingInput"
-                        v-model="form.email"
-                    />
-                    <label for="floatingInput">Email address</label>
-                    <p v-if="errors.email" class="text-danger">
-                        {{ errors.email[0] }}
-                    </p>
-                </div>
-                <div class="form-floating mb-3">
-                    <input
-                        type="password"
-                        class="form-control"
-                        id="floatingPassword"
-                        v-model="form.password"
-                    />
-                    <label for="floatingPassword">Šifra</label>
-                    <p v-if="errors.password" class="text-danger">
-                        {{ errors.password[0] }}
-                    </p>
-                </div>
+                        <div class="form-floating mb-3">
+                            <input
+                                type="email"
+                                class="form-control"
+                                id="floatingInput"
+                                v-model="form.email"
+                            />
+                            <label for="floatingInput">Email address</label>
+                            <p v-if="errors.email" class="text-danger">
+                                {{ errors.email[0] }}
+                            </p>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input
+                                type="password"
+                                class="form-control"
+                                id="floatingPassword"
+                                v-model="form.password"
+                            />
+                            <label for="floatingPassword">Šifra</label>
+                            <p v-if="errors.password" class="text-danger">
+                                {{ errors.password[0] }}
+                            </p>
+                        </div>
 
-                <button type="submit" class="btn btn-primary w-100 mt-4">
-                    Registriraj se
-                </button>
-                <div
-                    v-if="successReg"
-                    class="alert alert-success mt-3"
-                    role="alert"
-                >
-                    {{ poruka }} <a href="/login">Prijava</a>
+                        <button
+                            type="submit"
+                            class="btn btn-primary w-100 mt-4"
+                        >
+                            Prijavi se
+                        </button>
+                        <div
+                            v-if="successReg"
+                            class="alert alert-success mt-3"
+                            role="alert"
+                        >
+                            {{ poruka }} <a href="/login">Prijava</a>
+                        </div>
+                    </form>
                 </div>
-            </form>
+            </div>
         </div>
     </div>
+    </div>
+
 </template>
 
 <script>
@@ -81,7 +91,7 @@ export default {
                 .post("/logUser", Data)
                 .then((response) => {
                     this.poruka = response.data.poruka;
-                    this.$router.push('/');
+                    this.$router.push("/");
                 })
                 .catch((error) => {
                     if (error.response && error.response.status === 422) {
@@ -95,4 +105,8 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+
+
+
+</style>
