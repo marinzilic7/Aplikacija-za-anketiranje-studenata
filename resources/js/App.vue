@@ -1,3 +1,8 @@
+<script setup>
+import { RouterLink, RouterView } from "vue-router";
+
+</script>
+
 <template>
 
     <nav class="navbar navbar-expand-lg bg-dark">
@@ -66,10 +71,7 @@
 
 </template>
 
-<script>
 
-
-</script>
 
 <style scoped>
 

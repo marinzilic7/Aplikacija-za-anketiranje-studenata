@@ -57,7 +57,7 @@
 
 <script>
 import axios from "axios";
-
+import router from "../router";
 export default {
     data() {
         return {
@@ -68,6 +68,7 @@ export default {
             errors: {},
             csrfToken: "",
             POST: "",
+            loginMessage:"",
         };
     },
     methods: {
@@ -90,10 +91,14 @@ export default {
             axios
                 .post("/logUser", Data)
                 .then((response) => {
-                    this.poruka = response.data.poruka;
-                    this.$router.push("/");
+                    this.loginMessage = response.data.poruka;
+                    console.log(this.loginMessage)
+                    if(this.loginMessage === "Uspjesna prijava"){
+                        this.$router.push({path: "/"});
+                    }
                 })
                 .catch((error) => {
+                    console.log("Error:", error);
                     if (error.response && error.response.status === 422) {
                         this.errors = error.response.data.errors;
                     } else {

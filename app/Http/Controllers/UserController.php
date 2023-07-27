@@ -58,12 +58,12 @@ class UserController extends Controller
             ]
         );
 
-        $isExist = $request->only('email', 'password');
-        if (Auth::attempt($isExist)) {  /* provjerava da li korisnik postoji u bazi podataka */
+        $data = $request->only('email', 'password');
+        if (Auth::attempt($data)) {  /* provjerava da li korisnik postoji u bazi podataka */
 
             return response()->json(['poruka' => 'Uspješna prijava']);
         } else {
-            // Neuspješna prijava
+
             return response()->json(['poruka' => 'Neuspješna prijava']);
         }
     }
