@@ -46,6 +46,9 @@
                         >
                             {{ poruka }} <a href="/login">Prijava</a>
                         </div>
+                        <div v-if="falseReg" class="mt-3">
+                            <p class="alert alert-danger">{{ falseRegMessage }}</p>
+                        </div>
                     </form>
                 </div>
             </div>
@@ -57,7 +60,7 @@
 
 <script>
 import axios from "axios";
-import router from "../router";
+
 export default {
     data() {
         return {
@@ -69,6 +72,8 @@ export default {
             csrfToken: "",
             POST: "",
             loginMessage:"",
+            falseReg:false,
+            falseRegMessage:""
         };
     },
     methods: {
@@ -94,7 +99,10 @@ export default {
                     this.loginMessage = response.data.poruka;
                     console.log(this.loginMessage)
                     if(this.loginMessage === "Uspjesna prijava"){
-                        this.$router.push({path: "/"});
+                        this.$router.push("/");
+                    }else{
+                        this.falseReg = true;
+                        this.falseRegMessage = this.loginMessage
                     }
                 })
                 .catch((error) => {
