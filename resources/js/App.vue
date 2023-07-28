@@ -121,7 +121,6 @@ import { RouterLink, RouterView } from "vue-router";
                             >
                         </li>
                         <li v-else>
-
                             <div class="dropdown">
                                 <button
                                     class="btn btn-dark dropdown-toggle"
@@ -130,7 +129,6 @@ import { RouterLink, RouterView } from "vue-router";
                                     aria-expanded="false"
                                 >
                                     Dobrodošao, {{ loggedInUser.name }}
-
                                 </button>
                                 <ul class="dropdown-menu">
                                     <li>
@@ -151,6 +149,8 @@ import { RouterLink, RouterView } from "vue-router";
         </div>
     </nav>
 
+
+
     <RouterView />
 </template>
 
@@ -163,11 +163,11 @@ export default {
         };
     },
     computed: {
-    ...mapGetters(["loggedInUser"]),
-    isLoggedIn() {
-      return this.loggedInUser !== null;
+        ...mapGetters(["loggedInUser"]),
+        isLoggedIn() {
+            return this.loggedInUser !== null;
+        },
     },
-  },
     created() {
         this.checkLoginStatus();
     },
@@ -204,8 +204,6 @@ export default {
 
 <style scoped>
 .homeLink {
-
-
     text-decoration: none;
 }
 
