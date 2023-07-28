@@ -59,7 +59,7 @@
 
 <script>
 import axios from "axios";
-
+import { mapActions } from 'vuex';
 export default {
     data() {
         return {
@@ -73,6 +73,7 @@ export default {
             logMessage: "",
             falseReg: false,
             successRegg: false,
+
         };
     },
     methods: {
@@ -97,9 +98,11 @@ export default {
                 .then((response) => {
                     this.logMessage = response.data.poruka;
 
-                    console.log(this.logMessage);
+
                     this.successRegg = true;
                     if (this.logMessage == "Uspješna prijava") {
+                        this.$store.dispatch('setLoginMessage', this.logMessage)
+                        this.$store.commit("setLoggedInUser", response.data.user);
                         this.successRegg = true;
                         this.falseReg = false;
                         this.$router.push("/")
@@ -118,6 +121,7 @@ export default {
                 });
         },
     },
+    ...mapActions(['setLoginMessage'])
 };
 </script>
 

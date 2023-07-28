@@ -58,12 +58,32 @@ class UserController extends Controller
         );
 
 
-        if (Auth::attempt($data)) {  /* provjerava da li korisnik postoji u bazi podataka */
-
-            return response()->json(['poruka' => 'Uspješna prijava']);
+        if (Auth::attempt($data)) {
+            // Korisnik se uspješno prijavio
+            $user = Auth::user();
+            return response()->json(['poruka' => 'Uspješna prijava', 'user' => $user]);
         } else {
-
+            // Prijavljivanje nije uspjelo
             return response()->json(['poruka' => 'Neuspješna prijava']);
         }
+
+
+    }
+
+    public function isLogged()
+    {
+
+        $user = Auth::user();
+        if ($user) {
+            return response()->json($user);
+        } else {
+            return response()->json(null);
+        }
+    }
+
+    public function logout()
+    {
+        Auth::logout();
+        return response()->json(['redirect' => '/login']);
     }
 }
