@@ -4,8 +4,8 @@ const store = createStore({
     state() {
         return {
             loginMessage: '',
-            isLoggedIn: false,
-            loggedInUser: null,
+            isLoggedIn: JSON.parse(localStorage.getItem("isLoggedIn")) || false,
+            loggedInUser: JSON.parse(localStorage.getItem("loggedInUser")) || null,
         };
     },
     mutations: {
@@ -17,9 +17,15 @@ const store = createStore({
         },
         setLoggedInUser(state, user) {
             state.loggedInUser = user;
+            localStorage.setItem("loggedInUser", JSON.stringify(user));
         },
         setIsLoggedIn(state, isLoggedIn) {
             state.isLoggedIn = isLoggedIn;
+            localStorage.setItem("isLoggedIn", isLoggedIn);
+        },
+        logout(state) {
+            state.loggedInUser = null;
+            localStorage.removeItem("loggedInUser");
         },
     },
     actions: {
@@ -30,26 +36,24 @@ const store = createStore({
             commit('clearLoginMessage');
         },
         login({ commit }, user) {
-            // Ovdje bismo pozvali API za prijavu korisnika
-            // Kada dobijemo uspješan odgovor od servera, ažuriramo Vuex stanje
+
             commit("setLoggedInUser", user);
             commit("setIsLoggedIn", true);
-          },
-          logout({ commit }) {
-            // Ovdje bismo pozvali API za odjavu korisnika
-            // Kada dobijemo uspješan odgovor od servera, ažuriramo Vuex stanje
+        },
+        logout({ commit }) {
+
             commit("setLoggedInUser", null);
             commit("setIsLoggedIn", false);
-          },
+        },
     },
     getters: {
         loggedInUser(state) {
-          return state.loggedInUser;
+            return state.loggedInUser;
         },
         isLoggedIn(state) {
-          return state.isLoggedIn;
+            return state.isLoggedIn;
         },
-      },
+    },
 });
 
 export default store;
