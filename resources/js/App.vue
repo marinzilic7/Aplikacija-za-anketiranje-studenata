@@ -5,7 +5,7 @@ import { RouterLink, RouterView } from "vue-router";
 
 <template>
 
-    <nav class="navbar navbar-expand-lg bg-dark">
+    <nav class="navbar navbar-expand-lg bg-dark text-center col-sm-12 col-md-12 shadow-lg   ">
         <div class="container-fluid">
             <a class="navbar-brand text-light" href="#">Anketa</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -49,13 +49,16 @@ import { RouterLink, RouterView } from "vue-router";
 
                 </ul>
                 <ul class="navbar-nav ms-auto regDetails">
-                    <li class="nav-item class logItems">
+                    <div class="row">
+                        <li class="nav-item class col-12 d-flex flex-column col-sm-12 flex-sm-column justify-content-sm-center d-md-flex    col-md-12  flex-md-row logItems">
                         <RouterLink class="text-light pe-3" to="/login"
                         >Prijava</RouterLink>
                         <RouterLink class="text-light" to="/register"
                         >Registracija</RouterLink>
 
                     </li>
+                    </div>
+
                 </ul>
 
 

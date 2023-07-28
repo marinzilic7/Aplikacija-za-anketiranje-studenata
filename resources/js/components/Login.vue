@@ -1,61 +1,60 @@
 <template>
     <div class="my-component">
-        <div class="container mt-5 ">
-        <div class="row">
-            <div class="col-12 col-md-8 offset-md-3 col-lg-6  offset-lg-3 ">
-                <div class="border-round p-5 bg-light ">
-                    <form @submit.prevent="logUser" method="POST">
-                        <input type="hidden" v-model="this.POST" />
-                        <input type="hidden" name="" v-model="this.csrfToken" />
+        <div class="container mt-5">
+            <div class="row">
+                <div class="col-12 col-md-8 offset-md-3 col-lg-6 offset-lg-3">
+                    <div class="border-round p-5 bg-light">
+                        <form @submit.prevent="logUser" method="POST">
+                            <input type="hidden" :value="this.POST" />
+                            <input type="hidden" :value="this.csrfToken" />
 
-                        <div class="form-floating mb-3">
-                            <input
-                                type="email"
-                                class="form-control"
-                                id="floatingInput"
-                                v-model="form.email"
-                            />
-                            <label for="floatingInput">Email address</label>
-                            <p v-if="errors.email" class="text-danger">
-                                {{ errors.email[0] }}
-                            </p>
-                        </div>
-                        <div class="form-floating mb-3">
-                            <input
-                                type="password"
-                                class="form-control"
-                                id="floatingPassword"
-                                v-model="form.password"
-                            />
-                            <label for="floatingPassword">Šifra</label>
-                            <p v-if="errors.password" class="text-danger">
-                                {{ errors.password[0] }}
-                            </p>
-                        </div>
+                            <div class="form-floating mb-3">
+                                <input
+                                    type="email"
+                                    class="form-control"
+                                    id="floatingInput"
+                                    v-model="form.email"
+                                />
+                                <label for="floatingInput">Email address</label>
+                                <p v-if="errors.email" class="text-danger">
+                                    {{ errors.email[0] }}
+                                </p>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input
+                                    type="password"
+                                    class="form-control"
+                                    id="floatingPassword"
+                                    v-model="form.password"
+                                />
+                                <label for="floatingPassword">Šifra</label>
+                                <p v-if="errors.password" class="text-danger">
+                                    {{ errors.password[0] }}
+                                </p>
+                            </div>
+                            <button
+                                type="submit"
+                                class="btn btn-primary w-100 mt-4"
+                            >
+                                Prijavi se
+                            </button>
+                            <div v-if="successRegg" class="mt-3">
+                                <p class="alert alert-success">
+                                    Uspjesna prijava!
+                                </p>
+                            </div>
 
-                        <button
-                            type="submit"
-                            class="btn btn-primary w-100 mt-4"
-                        >
-                            Prijavi se
-                        </button>
-                        <div
-                            v-if="successReg"
-                            class="alert alert-success mt-3"
-                            role="alert"
-                        >
-                            {{ poruka }} <a href="/login">Prijava</a>
-                        </div>
-                        <div v-if="falseReg" class="mt-3">
-                            <p class="alert alert-danger">Pogresan email ili lozinka</p>
-                        </div>
-                    </form>
+                            <div v-if="falseReg" class="mt-3">
+                                <p class="alert alert-danger">
+                                    Pogresan email ili lozinka
+                                </p>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-    </div>
-
 </template>
 
 <script>
@@ -71,9 +70,9 @@ export default {
             errors: {},
             csrfToken: "",
             POST: "",
-            loginMessage:"",
-            falseReg:false,
-            falseRegMessage:""
+            logMessage: "",
+            falseReg: false,
+            successRegg: false,
         };
     },
     methods: {
@@ -96,13 +95,17 @@ export default {
             axios
                 .post("/logUser", Data)
                 .then((response) => {
-                    this.loginMessage = response.data.poruka;
-                    console.log(this.loginMessage)
-                    if(this.loginMessage === "Uspjesna prijava"){
-                        this.$router.push("/");
-                    }else{
-                        this.falseReg = true;
+                    this.logMessage = response.data.poruka;
 
+                    console.log(this.logMessage);
+                    this.successRegg = true;
+                    if (this.logMessage == "Uspješna prijava") {
+                        this.successRegg = true;
+                        this.falseReg = false;
+                        this.$router.push("/")
+                    } else {
+                        this.falseReg = true
+                        this.successRegg = false;
                     }
                 })
                 .catch((error) => {
@@ -118,8 +121,4 @@ export default {
 };
 </script>
 
-<style scoped>
-
-
-
-</style>
+<style scoped></style>

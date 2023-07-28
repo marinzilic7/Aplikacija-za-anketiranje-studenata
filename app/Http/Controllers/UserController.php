@@ -47,7 +47,6 @@ class UserController extends Controller
         $data = $request->validate(
             [
                 'email' => 'required|email',
-                'email' => 'required',
                 'password' => 'required',
 
             ],
@@ -58,7 +57,7 @@ class UserController extends Controller
             ]
         );
 
-        $data = $request->only('email', 'password');
+
         if (Auth::attempt($data)) {  /* provjerava da li korisnik postoji u bazi podataka */
 
             return response()->json(['poruka' => 'Uspješna prijava']);
