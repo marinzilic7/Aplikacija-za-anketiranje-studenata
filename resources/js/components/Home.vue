@@ -16,7 +16,7 @@
 import { mapState } from "vuex";
 
 export default {
-    // ... ostatak komponente ...
+
 
     computed: {
         ...mapState(["loginMessage"]),
@@ -24,7 +24,7 @@ export default {
     created() {
         if (this.loginMessage) {
             setTimeout(() => {
-                this.$store.commit("setLoginMessage", ""); // Postavi loginMessage na prazan string kako bi sakrili poruku
+                this.$store.commit("setLoginMessage", "");
             }, 2000);
         }
     },

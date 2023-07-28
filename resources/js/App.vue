@@ -21,12 +21,12 @@ import { RouterLink, RouterView } from "vue-router";
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav">
-                    <li class="nav-item">
+                    <li class="nav-item mt-2">
                         <RouterLink class="text-light homeLink" to="/"
                             >Home</RouterLink
                         >
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item ms-2" v-if="isLoggedIn">
                         <button
                             type="button"
                             class="btn btn-dark ps-3"
@@ -121,16 +121,16 @@ import { RouterLink, RouterView } from "vue-router";
                             >
                         </li>
                         <li v-else>
-                            <!-- Dugme s padajućim izbornikom za prijavljenog korisnika -->
+
                             <div class="dropdown">
                                 <button
-                                    class="btn btn-primary dropdown-toggle"
+                                    class="btn btn-dark dropdown-toggle"
                                     type="button"
                                     data-bs-toggle="dropdown"
                                     aria-expanded="false"
                                 >
                                     Dobrodošao, {{ loggedInUser.name }}
-                                    <!-- Prikazuje ime korisnika koji je prijavljen -->
+
                                 </button>
                                 <ul class="dropdown-menu">
                                     <li>
@@ -204,8 +204,8 @@ export default {
 
 <style scoped>
 .homeLink {
-    position: relative;
-    top: 7px;
+
+
     text-decoration: none;
 }
 
