@@ -3,9 +3,7 @@ import { RouterLink, RouterView } from "vue-router";
 </script>
 
 <template>
-    <nav
-        class="navbar navbar-expand-lg bg-dark text-center col-sm-12 col-md-12 shadow-lg"
-    >
+    <nav class="navbar navbar-expand-lg bg-dark col-sm-12 col-md-12 shadow-lg">
         <div class="container-fluid">
             <a class="navbar-brand text-light" href="#">Anketa</a>
             <button
@@ -50,7 +48,7 @@ import { RouterLink, RouterView } from "vue-router";
                                             class="modal-title fs-5"
                                             id="exampleModalLabel"
                                         >
-                                            New message
+                                            Nova anketa
                                         </h1>
                                         <button
                                             type="button"
@@ -60,30 +58,89 @@ import { RouterLink, RouterView } from "vue-router";
                                         ></button>
                                     </div>
                                     <div class="modal-body">
-                                        <form>
+                                        <form
+                                            @submit.prevent="dodajAnketu"
+                                            method="POST"
+                                        >
+                                            <input
+                                                type="hidden"
+                                                v-model="this.POST"
+                                            />
+                                            <input
+                                                type="hidden"
+                                                name=""
+                                                v-model="this.csrfToken"
+                                            />
                                             <div class="mb-3">
                                                 <label
                                                     for="recipient-name"
                                                     class="col-form-label"
-                                                    >Recipient:</label
+                                                    >Naziv ankete :</label
                                                 >
                                                 <input
                                                     type="text"
                                                     class="form-control"
                                                     id="recipient-name"
+                                                    v-model="anketa.naziv"
                                                 />
                                             </div>
                                             <div class="mb-3">
                                                 <label
                                                     for="message-text"
                                                     class="col-form-label"
-                                                    >Message:</label
+                                                    >Opis ankete:</label
                                                 >
                                                 <textarea
                                                     class="form-control"
                                                     id="message-text"
+                                                    v-model="anketa.opis"
                                                 ></textarea>
                                             </div>
+                                            <div class="mb-3">
+                                                <label
+                                                    for="recipient-name"
+                                                    class="col-form-label"
+                                                    >Pitanje 1 :</label
+                                                >
+                                                <input
+                                                    type="text"
+                                                    class="form-control"
+                                                    id="recipient-name"
+                                                    v-model="anketa.pitanje1"
+                                                />
+                                            </div>
+                                            <div class="mb-3">
+                                                <label
+                                                    for="recipient-name"
+                                                    class="col-form-label"
+                                                    >Pitanje 2 :</label
+                                                >
+                                                <input
+                                                    type="text"
+                                                    class="form-control"
+                                                    id="recipient-name"
+                                                    v-model="anketa.pitanje2"
+                                                />
+                                            </div>
+                                            <div class="mb-3">
+                                                <label
+                                                    for="recipient-name"
+                                                    class="col-form-label"
+                                                    >Pitanje 3 :</label
+                                                >
+                                                <input
+                                                    type="text"
+                                                    class="form-control"
+                                                    id="recipient-name"
+                                                    v-model="anketa.pitanje3"
+                                                />
+                                            </div>
+                                            <button
+                                                type="submit"
+                                                class="btn btn-primary w-100"
+                                            >
+                                                Dodaj anketu
+                                            </button>
                                         </form>
                                     </div>
                                     <div class="modal-footer">
@@ -93,12 +150,6 @@ import { RouterLink, RouterView } from "vue-router";
                                             data-bs-dismiss="modal"
                                         >
                                             Close
-                                        </button>
-                                        <button
-                                            type="button"
-                                            class="btn btn-primary"
-                                        >
-                                            Send message
                                         </button>
                                     </div>
                                 </div>
@@ -112,7 +163,6 @@ import { RouterLink, RouterView } from "vue-router";
                             v-if="!isLoggedIn"
                             class="nav-item class col-12 d-flex flex-column col-sm-12 flex-sm-column justify-content-sm-center d-md-flex col-md-12 flex-md-row logItems"
                         >
-                            <!-- Poveznice za prijavu i registraciju -->
                             <RouterLink class="text-light pe-3" to="/login"
                                 >Prijava</RouterLink
                             >
@@ -128,7 +178,7 @@ import { RouterLink, RouterView } from "vue-router";
                                     data-bs-toggle="dropdown"
                                     aria-expanded="false"
                                 >
-                                    Dobrodošao, {{ loggedInUser.name }}
+                                    {{ loggedInUser.name }}
                                 </button>
                                 <ul class="dropdown-menu">
                                     <li>
@@ -149,8 +199,6 @@ import { RouterLink, RouterView } from "vue-router";
         </div>
     </nav>
 
-
-
     <RouterView />
 </template>
 
@@ -160,6 +208,18 @@ export default {
     data() {
         return {
             isLoggedIn: false,
+            anketa: {
+                naziv: "",
+                opis: "",
+                pitanje1: "",
+                pitanje2: "",
+                pitanje3: "",
+            },
+            csrfToken: "",
+            POST: "",
+            errors: {},
+            poruka: "",
+            ankete: [],
         };
     },
     computed: {
@@ -196,6 +256,38 @@ export default {
                 })
                 .catch((error) => {
                     console.log(error);
+                });
+        },
+        dodajAnketu() {
+            const Data = {
+                naziv: this.anketa.naziv,
+                opis: this.anketa.opis,
+                pitanje1: this.anketa.pitanje1,
+                pitanje2: this.anketa.pitanje2,
+                pitanje3: this.anketa.pitanje3,
+            };
+            axios.defaults.headers.common["X-CSRF-TOKEN"] = this.csrfToken;
+            axios
+                .post("/dodajAnketu", Data)
+                .then((response) => {
+                    this.poruka = response.data.poruka;
+
+
+                    this.anketa = {
+                        naziv: "",
+                        opis: "",
+                        pitanje1: "",
+                        pitanje2: "",
+                        pitanje3: "",
+                    };
+                    this.errors = {};
+                })
+                .catch((error) => {
+                    if (error.response && error.response.status === 422) {
+                        this.errors = error.response.data.errors;
+                    } else {
+                        console.log(error);
+                    }
                 });
         },
     },
