@@ -15,6 +15,8 @@ Route::post('/logout',[UserController::class,'logout']);
 
 Route::post('/dodajAnketu',[AnketaController::class,'dodajAnketu']);
 Route::get('/getAnketa',[AnketaController::class,'getAnketa']);
+Route::post('/delete/{id}',[AnketaController::class,'deleteAnketa']);
+
 
 Route::get('/{any}', function () {
     return view('welcome');

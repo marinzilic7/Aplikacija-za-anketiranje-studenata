@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Anketa;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 
 
@@ -46,5 +47,17 @@ class AnketaController extends Controller
 
         return response()->json($anketa);
     }
+
+    public function deleteAnketa($id){
+        try {
+            $anketa = Anketa::findOrFail($id);
+            $anketa->delete();
+
+            return response()->json(['message' => 'Anketa je uspješno obrisana']);
+        } catch (ModelNotFoundException $e) {
+            return response()->json(['message' => 'Anketa nije pronađena'], 404);
+        }
+    }
+
 
 }

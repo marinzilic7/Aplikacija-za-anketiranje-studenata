@@ -139,7 +139,11 @@
     <!-- ANKETE -->
     <div class="container">
         <div class="d-flex mt-5 p-5">
-            <div class="border w-100 p-5" v-for="anketa in ankete" :key="anketa.id">
+            <div
+                class="border w-100 p-5"
+                v-for="anketa in ankete"
+                :key="anketa.id"
+            >
                 <h4>{{ anketa.naziv }}</h4>
 
                 <h4 class="fw-bold text-center mt-3"></h4>
@@ -184,8 +188,14 @@
                     </div>
                 </form>
                 <div class="card-footer text-end">
-                    <button type="button" class="btn btn-primary ">
+                    <button type="button" class="btn btn-sm btn-primary">
                         Submit
+                    </button>
+                    <button type="button" class="btn btn-sm btn-warning">
+                        Update
+                    </button>
+                    <button type="button" class="btn btn-sm btn-danger"  @click="izbrisiAnketu(anketa.id)">
+                        Izbrisi
                     </button>
                 </div>
             </div>
@@ -266,7 +276,7 @@ export default {
                 .post("/dodajAnketu", Data)
                 .then((response) => {
                     this.poruka = response.data.poruka;
-
+                    this.ankete.push(this.anketa);
                     this.anketa = {
                         naziv: "",
                         opis: "",
@@ -275,6 +285,14 @@ export default {
                         pitanje3: "",
                     };
                     this.errors = {};
+                    this.getAnketa();
+                    $(document).ready(function () {
+
+                        $("#exampleModal").modal("hide");
+
+
+
+                    });
                 })
                 .catch((error) => {
                     if (error.response && error.response.status === 422) {
@@ -282,6 +300,20 @@ export default {
                     } else {
                         console.log(error);
                     }
+                });
+        },
+        izbrisiAnketu(id) {
+            axios.defaults.headers.common["X-CSRF-TOKEN"] = this.csrfToken;
+            axios
+                .post(`/delete/${id} `)
+                .then((response) => {
+                    this.ankete = this.ankete.filter(
+                        (anketaa) => anketaa.id !== id
+                    );
+
+                })
+                .catch((error) => {
+                    console.log(error);
                 });
         },
     },
