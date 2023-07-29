@@ -69,6 +69,7 @@
 <script>
 import { mapState } from "vuex";
 import axios from "axios";
+
 export default {
     data() {
         return {
@@ -85,10 +86,13 @@ export default {
             }, 2000);
         }
 
+
     },
-    mounted() {
-        this.getAnketa();
+    mounted(){
+        this.getAnketa()
     },
+
+
     methods: {
         getAnketa() {
             axios

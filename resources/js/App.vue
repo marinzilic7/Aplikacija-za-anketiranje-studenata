@@ -203,6 +203,7 @@ import { RouterLink, RouterView } from "vue-router";
 </template>
 
 <script>
+
 import { mapGetters } from "vuex";
 export default {
     data() {
@@ -219,7 +220,7 @@ export default {
             POST: "",
             errors: {},
             poruka: "",
-            ankete: [],
+
         };
     },
     computed: {
@@ -271,7 +272,6 @@ export default {
                 .post("/dodajAnketu", Data)
                 .then((response) => {
                     this.poruka = response.data.poruka;
-
 
                     this.anketa = {
                         naziv: "",
