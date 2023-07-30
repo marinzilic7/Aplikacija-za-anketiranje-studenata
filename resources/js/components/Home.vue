@@ -80,6 +80,7 @@
                                             >
                                             <select
                                                 id="category"
+                                                class="ms-2"
                                                 v-model="anketa.category_id"
                                                 required
                                             >

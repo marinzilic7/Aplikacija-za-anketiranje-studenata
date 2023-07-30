@@ -19,7 +19,7 @@ import { RouterLink, RouterView } from "vue-router";
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav">
-                    <li class="nav-item mt-2">
+                    <li class="nav-item ">
                         <RouterLink class="text-light homeLink" to="/"
                             >Home</RouterLink
                         >
