@@ -210,7 +210,9 @@
                         </label>
                     </div>
                 </form>
+
                 <div class="card-footer text-end">
+                    <p class="text-start text-success Created">{{ anketa.created_at }}</p>
                     <button type="button" class="btn btn-sm btn-primary">
                         Submit
                     </button>
@@ -539,5 +541,11 @@ export default {
 .logMessage {
     width: 10%;
     position: absolute;
+}
+
+.Created{
+    position: relative;
+    top:50px;
+
 }
 </style>
