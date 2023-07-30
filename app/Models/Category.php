@@ -7,5 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Category extends Model
 {
+
+    public function anketas()
+    {
+        return $this->hasMany(Anketa::class);
+    }
     use HasFactory;
 }

@@ -170,6 +170,7 @@
                 <h4 class="fw-bold text-center mt-3"></h4>
                 <form class="px-4" action="">
                     <p class="fw-bold">{{ anketa.opis }}</p>
+                    <p class="fw-bold">Predmet: {{ anketa.category.name }}</p>
                     <div class="form-check">
                         <input
                             class="form-check-input"

@@ -42,8 +42,8 @@ class AnketaController extends Controller
     }
 
     public function getAnketa(){
+        $anketa = Anketa::with('category')->get();
 
-        $anketa = Anketa::get();
 
 
         return response()->json($anketa);
