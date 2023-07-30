@@ -127,7 +127,7 @@
                                 class="btn btn-secondary w-100"
                                 data-bs-dismiss="modal"
                             >
-                                Close
+                                Zatvori
                             </button>
                         </div>
                     </div>
@@ -138,9 +138,9 @@
 
     <!-- ANKETE -->
     <div class="container">
-        <div class="d-flex mt-5 p-5">
+        <div class="d-flex flex-column mt-5 p-5">
             <div
-                class="border w-100 p-5"
+                class="border w-100 p-5 mt-3"
                 v-for="anketa in ankete"
                 :key="anketa.id"
             >
@@ -191,12 +191,142 @@
                     <button type="button" class="btn btn-sm btn-primary">
                         Submit
                     </button>
-                    <button type="button" class="btn btn-sm btn-warning">
-                        Update
+                    <button
+                        type="button"
+                        class="btn btn-sm btn-warning ms-2"
+                        data-bs-toggle="modal"
+                        :data-bs-target="'#updateModal' + anketa.id"
+                        data-bs-whatever="@getbootstrap"
+                        @click="openUpdateAnketa(anketa)"
+                    >
+                        Uredi
                     </button>
-                    <button type="button" class="btn btn-sm btn-danger"  @click="izbrisiAnketu(anketa.id)">
+
+                    <button
+                        type="button"
+                        class="btn btn-sm btn-danger ms-2"
+                        @click="izbrisiAnketu(anketa.id)"
+                    >
                         Izbrisi
                     </button>
+                </div>
+                <div
+                    class="modal fade"
+                    :id="'updateModal' + anketa.id"
+                    tabindex="-1"
+                    :aria-labelledby="'exampleModalLabell' + anketa.id"
+                    aria-hidden="true"
+                >
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5
+                                    class="modal-title"
+                                    :id="'modalUpdate' + anketa.id"
+                                >
+                                    Uredi anketu
+                                </h5>
+                                <button
+                                    type="button"
+                                    class="btn-close"
+                                    data-bs-dismiss="modal"
+                                    aria-label="Close"
+                                ></button>
+                            </div>
+                            <div class="modal-body">
+                                <form
+                                    @submit.prevent="urediAnketu(anketa.id)"
+                                    method="POST"
+                                >
+                                    <input type="hidden" v-model="this.POST" />
+                                    <input
+                                        type="hidden"
+                                        name=""
+                                        v-model="this.csrfToken"
+                                    />
+                                    <div class="mb-3">
+                                        <label
+                                            for="recipient-name"
+                                            class="col-form-label"
+                                            >Naziv:</label
+                                        >
+                                        <input
+                                            type="text"
+                                            class="form-control"
+                                            id="recipient-name"
+                                            v-model="form.naziv"
+                                        />
+                                    </div>
+                                    <div class="mb-3">
+                                        <label
+                                            for="message-text"
+                                            class="col-form-label"
+                                            >Opis:</label
+                                        >
+                                        <textarea
+                                            class="form-control"
+                                            id="message-text"
+                                            v-model="form.opis"
+                                        ></textarea>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label
+                                            for="recipient-name"
+                                            class="col-form-label"
+                                            >Odgovor 1:</label
+                                        >
+                                        <input
+                                            type="text"
+                                            class="form-control"
+                                            id="recipient-name"
+                                            v-model="form.pitanje1"
+                                        />
+                                    </div>
+                                    <div class="mb-3">
+                                        <label
+                                            for="recipient-name"
+                                            class="col-form-label"
+                                            >Odgovor 2:</label
+                                        >
+                                        <input
+                                            type="text"
+                                            class="form-control"
+                                            id="recipient-name"
+                                            v-model="form.pitanje2"
+                                        />
+                                    </div>
+                                    <div class="mb-3">
+                                        <label
+                                            for="recipient-name"
+                                            class="col-form-label"
+                                            >Odgovor 3:</label
+                                        >
+                                        <input
+                                            type="text"
+                                            class="form-control"
+                                            id="recipient-name"
+                                            v-model="form.pitanje3"
+                                        />
+                                    </div>
+                                    <button
+                                        type="submit"
+                                        class="btn btn-primary w-100"
+                                    >
+                                        Uredi anketu
+                                    </button>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button
+                                    type="button"
+                                    class="btn btn-secondary w-100"
+                                    data-bs-dismiss="modal"
+                                >
+                                    Zatvori
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -218,10 +348,19 @@ export default {
                 pitanje2: "",
                 pitanje3: "",
             },
+            form: {
+                naziv: "",
+                opis: "",
+                pitanje1: "",
+                pitanje2: "",
+                pitanje3: "",
+            },
+
             csrfToken: "",
             POST: "",
             errors: {},
             poruka: "",
+            currentanketaId: null,
         };
     },
     computed: {
@@ -277,21 +416,17 @@ export default {
                 .then((response) => {
                     this.poruka = response.data.poruka;
                     this.ankete.push(this.anketa);
-                    this.anketa = {
+                    (this.anketa = {
                         naziv: "",
                         opis: "",
                         pitanje1: "",
                         pitanje2: "",
                         pitanje3: "",
-                    };
-                    this.errors = {};
+                    }),
+                        (this.errors = {});
                     this.getAnketa();
                     $(document).ready(function () {
-
                         $("#exampleModal").modal("hide");
-
-
-
                     });
                 })
                 .catch((error) => {
@@ -310,7 +445,48 @@ export default {
                     this.ankete = this.ankete.filter(
                         (anketaa) => anketaa.id !== id
                     );
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        },
+        openUpdateAnketa(anketa) {
+            this.currentanketaId = anketa.id; // Postavljamo trenutni ID kursa koji se ažurira
+            this.form.naziv = anketa.naziv; // Postavljamo vrijednost forme na trenutni naslov kursa
+            this.form.opis = anketa.opis; // Postavljamo vrijednost forme na trenuti opis kursa
+            this.form.pitanje1 = anketa.pitanje1; // Postavljamo vrijednost forme na trenuti opis kursa
+            this.form.pitanje2 = anketa.pitanje2; // Postavljamo vrijednost forme na trenuti opis kursa
+            this.form.pitanje3 = anketa.pitanje3; // Postavljamo vrijednost forme na trenuti opis kursa
+            $("#updateModal" + anketa.id).modal("show"); // Prikazujemo modal za ažuriranje kursa
+        },
+        urediAnketu(id) {
+            axios.defaults.headers.common["X-CSRF-TOKEN"] = this.csrfToken;
+            console.log(id);
 
+            axios
+                .post(`/urediAnketu/${id}`, {
+                    naziv: this.form.naziv,
+                    opis: this.form.opis,
+                    pitanje1: this.form.pitanje1,
+                    pitanje2: this.form.pitanje2,
+                    pitanje3: this.form.pitanje3,
+                })
+                .then((response) => {
+                    const updatedAnketa = response.data.anketa;
+                    console.log(updatedAnketa);
+                    const index = this.ankete.findIndex(
+                        (anketa) => anketa.id === this.currentanketaId
+                    );
+                    if (index !== -1) {
+                        /* this.courses.splice(index, 1, updatedCourse); */
+                        this.ankete[index].naziv = updatedAnketa.naziv;
+                        this.ankete[index].opis = updatedAnketa.opis;
+                        this.ankete[index].pitanje1 = updatedAnketa.pitanje1;
+                        this.ankete[index].pitanje2 = updatedAnketa.pitanje2;
+                        this.ankete[index].pitanje3 = updatedAnketa.pitanje3;
+                    }
+
+                    $("#updateModal" + this.currentanketaId).modal("hide");
                 })
                 .catch((error) => {
                     console.log(error);

@@ -59,5 +59,31 @@ class AnketaController extends Controller
         }
     }
 
+    public function urediAnketu (Request $request, $id){
+
+        $anketa = Anketa::findOrFail($id);
+
+        $data = $request->validate([
+            'naziv' => 'required|string',
+            'opis' => 'required|string',
+            'pitanje1' => 'required|string',
+            'pitanje2' => 'required|string',
+            'pitanje3' => 'required|string',
+        ]);
+
+        $anketa->naziv=$data['naziv'];
+        $anketa->opis=$data['opis'];
+        $anketa->pitanje1=$data['pitanje1'];
+        $anketa->pitanje2=$data['pitanje2'];
+        $anketa->pitanje3=$data['pitanje3'];
+        $anketa->save();
+
+        return response()->json([
+            'message' => 'Anketa uspjesno uređena',
+            'anketa' => $anketa,
+        ]);
+    }
+
+
 
 }
