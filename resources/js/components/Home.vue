@@ -74,6 +74,27 @@
                                         v-model="anketa.opis"
                                     ></textarea>
                                 </div>
+                                <div>
+                                            <label for="category"
+                                                >Predmet:</label
+                                            >
+                                            <select
+                                                id="category"
+                                                v-model="anketa.category_id"
+                                                required
+                                            >
+                                                <option value="">
+                                                    Odaberi predmet
+                                                </option>
+                                                <option
+                                                    v-for="predmet in predmeti"
+                                                    :value="predmet.id"
+                                                    :key="predmet.id"
+                                                >
+                                                    {{ predmet.name }}
+                                                </option>
+                                            </select>
+                                        </div>
                                 <div class="mb-3">
                                     <label
                                         for="recipient-name"
@@ -347,6 +368,7 @@ export default {
                 pitanje1: "",
                 pitanje2: "",
                 pitanje3: "",
+                category_id:""
             },
             form: {
                 naziv: "",
@@ -361,6 +383,7 @@ export default {
             errors: {},
             poruka: "",
             currentanketaId: null,
+            predmeti:[]
         };
     },
     computed: {
@@ -379,6 +402,7 @@ export default {
     },
     mounted() {
         this.getAnketa();
+        this.getPredmeti();
     },
 
     methods: {
@@ -409,6 +433,7 @@ export default {
                 pitanje1: this.anketa.pitanje1,
                 pitanje2: this.anketa.pitanje2,
                 pitanje3: this.anketa.pitanje3,
+                category_id : this.anketa.category_id
             };
             axios.defaults.headers.common["X-CSRF-TOKEN"] = this.csrfToken;
             axios
@@ -422,6 +447,7 @@ export default {
                         pitanje1: "",
                         pitanje2: "",
                         pitanje3: "",
+                        category_id:"",
                     }),
                         (this.errors = {});
                     this.getAnketa();
@@ -487,6 +513,17 @@ export default {
                     }
 
                     $("#updateModal" + this.currentanketaId).modal("hide");
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        },
+
+        getPredmeti() {
+            axios
+                .get("/getPredmeti")
+                .then((response) => {
+                    this.predmeti = response.data;
                 })
                 .catch((error) => {
                     console.log(error);

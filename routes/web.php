@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AnketaController;
+use App\Http\Controllers\CategoryController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 
@@ -18,6 +19,10 @@ Route::get('/getAnketa',[AnketaController::class,'getAnketa']);
 Route::post('/delete/{id}',[AnketaController::class,'deleteAnketa']);
 Route::post('/urediAnketu/{id}',[AnketaController::class,'urediAnketu']);
 
+
+/* Predmeti */
+
+Route::get('/getPredmeti',[CategoryController::class,'getPredmeti']);
 
 Route::get('/{any}', function () {
     return view('welcome');

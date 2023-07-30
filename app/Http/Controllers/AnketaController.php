@@ -18,7 +18,8 @@ class AnketaController extends Controller
                 'opis' => 'required',
                 'pitanje1' => 'required',
                 'pitanje2' => 'required',
-                'pitanje3' => 'required'
+                'pitanje3' => 'required',
+                'category_id' => 'required',
             ],
             [
                 'naziv.required' => "Ime ankete je obavezno",
