@@ -546,6 +546,7 @@ export default {
 .Created{
     position: relative;
     top:50px;
+    width:50%;
 
 }
 </style>
