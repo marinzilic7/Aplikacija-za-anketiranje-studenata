@@ -17,14 +17,26 @@ class AnswerController extends Controller
             ],
 
         );
-        $odgovor = new Answer();
+
         $data['user_id'] = auth()->id();
-        $odgovor->create($data);
-        if($odgovor){
-            return response()->json(['poruka' => 'Glasano']);
+
+        $existingAnswer = Answer::where('user_id', $data['user_id'])
+        ->where('anketa_id', $data['anketa_id'])
+        ->first();
+
+        if ($existingAnswer) {
+            // Ako korisnik već glasa, onemogućite unos
+            return response()->json(['poruka' => 'Već ste glasali za ovu anketu.']);
         }else{
-            return response()->json(['poruka' => 'Neuspjesno glasanje!']);
+            $odgovor = new Answer();
+            $odgovor->create($data);
+            return response()->json(['poruka' => 'Glasano']);
         }
+
+
+
+
+
 
 
     }

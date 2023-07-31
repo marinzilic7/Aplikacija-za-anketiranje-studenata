@@ -164,6 +164,10 @@
                 v-for="anketa in ankete"
                 :key="anketa.id"
             >
+                <div class="alert alert-warning" v-if="glasano">
+                    {{ porukaGlasano }}
+                </div>
+
                 <h4>{{ anketa.naziv }}</h4>
 
                 <h4 class="fw-bold text-center mt-3"></h4>
@@ -185,6 +189,7 @@
                             :value="anketa.pitanje1"
                             id="pitanje1"
                             v-model="odgovor.pitanje1"
+                            :disabled="glasano"
                         />
                         <label class="form-check-label" for="pitanje1">
                             {{ anketa.pitanje1 }}
@@ -198,6 +203,7 @@
                             :value="anketa.pitanje2"
                             id="pitanje2"
                             v-model="odgovor.pitanje2"
+                            :disabled="glasano"
                         />
                         <label class="form-check-label" for="pitanje2">
                             {{ anketa.pitanje2 }}
@@ -211,6 +217,7 @@
                             :value="anketa.pitanje3"
                             id="pitanje3"
                             v-model="odgovor.pitanje3"
+                            :disabled="glasano"
                         />
                         <label class="form-check-label" for="pitanje3">
                             {{ anketa.pitanje3 }}
@@ -406,6 +413,9 @@ export default {
             poruka: "",
             currentanketaId: null,
             predmeti: [],
+            glasano: false,
+            porukaGlasano: "",
+            successGlasano: "",
         };
     },
     computed: {
@@ -421,6 +431,11 @@ export default {
                 this.$store.commit("setLoginMessage", "");
             }, 2000);
         }
+        /* const glasano = localStorage.getItem("glasano");
+        if (glasano === "true") {
+            this.glasano = true;
+            this.porukaGlasano = "Vec ste glasali za ovu anketu!"
+        } */
     },
     mounted() {
         this.getAnketa();
@@ -568,7 +583,8 @@ export default {
             axios
                 .post("/dodajOdgovor", Odgovor)
                 .then((response) => {
-                    this.poruka = response.data.poruka;
+                    this.glasano = true;
+                    this.porukaGlasano = response.data.poruka;
                 })
                 .catch((error) => {
                     if (error.response && error.response.status === 422) {
