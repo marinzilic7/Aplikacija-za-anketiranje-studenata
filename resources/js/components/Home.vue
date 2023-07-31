@@ -220,12 +220,20 @@
                         </label>
                     </div>
                     <div class="form-check"></div>
-                    <button type="submit" class="btn btn-sm btn-primary">
+                    <button type="submit" class="btn btn-sm btn-primary" :disabled="checkIfGlasano(anketa.id)">
                         Submit
                     </button>
-
                 </form>
-
+                <div
+                    class="alert"
+                    :class="{
+                        'alert-warning': checkIfGlasano(anketa.id),
+                        'alert-success': !checkIfGlasano(anketa.id),
+                    }"
+                    v-if="checkIfGlasano(anketa.id)"
+                >
+                    Glasali ste za ovu anketu!
+                </div>
                 <div class="card-footer text-end">
                     <p class="text-start text-success Created">
                         {{ anketa.created_at }}
@@ -578,14 +586,10 @@ export default {
                 .then((response) => {
                     this.porukaGlasano = response.data.poruka;
 
-                    if (this.porukaGlasano === "Glasano") {
-                        this.glasanoo = true;
-                    } else {
-                        const key = `glasano_${anketaId}`;
-                        localStorage.setItem(key, "true"); // Sprema vrijednost za ovu anketu u localStorage
+                    const key = `glasano_${anketaId}`;
+                    localStorage.setItem(key, "true"); // Sprema vrijednost za ovu anketu u localStorage
 
-                        this.checkIfGlasano(anketaId);
-                    }
+                    this.checkIfGlasano(anketaId);
                 })
                 .catch((error) => {
                     if (error.response && error.response.status === 422) {
@@ -598,6 +602,7 @@ export default {
         checkIfGlasano(anketaId) {
             const key = `glasano_${anketaId}`;
             const glasano = localStorage.getItem(key);
+
             return glasano === "true";
         },
     },
