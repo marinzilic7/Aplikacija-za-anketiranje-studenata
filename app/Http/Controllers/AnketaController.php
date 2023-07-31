@@ -33,7 +33,7 @@ class AnketaController extends Controller
         $data['user_id'] = auth()->id();
         $anketa->create($data);
         if($anketa){
-            return response()->json(['poruka' => 'Anketa dodana']);
+            return response()->json(['poruka' => 'Anketa je uspjesno dodana']);
         }else{
             return response()->json(['poruka' => 'Neuspjesno dodavanje ankete!']);
         }
@@ -54,9 +54,9 @@ class AnketaController extends Controller
             $anketa = Anketa::findOrFail($id);
             $anketa->delete();
 
-            return response()->json(['message' => 'Anketa je uspješno obrisana']);
+            return response()->json(['poruka' => 'Anketa je uspješno obrisana']);
         } catch (ModelNotFoundException $e) {
-            return response()->json(['message' => 'Anketa nije pronađena'], 404);
+            return response()->json(['poruka' => 'Anketa nije pronađena'], 404);
         }
     }
 
@@ -80,7 +80,7 @@ class AnketaController extends Controller
         $anketa->save();
 
         return response()->json([
-            'message' => 'Anketa uspjesno uređena',
+            'poruka' => 'Anketa uspjesno uređena',
             'anketa' => $anketa,
         ]);
     }

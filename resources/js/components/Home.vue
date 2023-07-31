@@ -155,7 +155,12 @@
             </div>
         </div>
     </div>
-
+    <div
+        class="alert alert-success position-fixed me-3 end-0 Notti"
+        v-if="notifikacije"
+    >
+        {{ poruka }}
+    </div>
     <!-- ANKETE -->
     <div class="container">
         <div class="d-flex flex-column mt-5 p-5">
@@ -164,7 +169,7 @@
                 v-for="anketa in ankete"
                 :key="anketa.id"
             >
-                <h4>{{ anketa.naziv }}</h4>
+                <h4>Tema ankete: {{ anketa.naziv }}</h4>
 
                 <h4 class="fw-bold text-center mt-3"></h4>
                 <form
@@ -175,7 +180,7 @@
                     <input type="hidden" v-model="this.POST" />
                     <input type="hidden" name="" v-model="this.csrfToken" />
 
-                    <p class="fw-bold">{{ anketa.opis }}</p>
+                    <p class="fw-bold">Opis ankete: {{ anketa.opis }}</p>
                     <p class="fw-bold">Predmet: {{ anketa.category.name }}</p>
                     <div class="form-check">
                         <input
@@ -220,20 +225,25 @@
                         </label>
                     </div>
                     <div class="form-check"></div>
-                    <button type="submit" class="btn btn-sm btn-primary" :disabled="checkIfGlasano(anketa.id)">
-                        Submit
+                    <button
+                        type="submit"
+                        class="btn btn-primary"
+                        :disabled="checkIfGlasano(anketa.id)"
+                    >
+                        Glasaj
                     </button>
                 </form>
                 <div
-                    class="alert"
+                    class="alert mt-3"
                     :class="{
                         'alert-warning': checkIfGlasano(anketa.id),
                         'alert-success': !checkIfGlasano(anketa.id),
                     }"
                     v-if="checkIfGlasano(anketa.id)"
                 >
-                    Glasali ste za ovu anketu!
+                    Samo jednom možete glasovati
                 </div>
+
                 <div class="card-footer text-end">
                     <p class="text-start text-success Created">
                         {{ anketa.created_at }}
@@ -419,7 +429,7 @@ export default {
             currentanketaId: null,
             predmeti: [],
             glasano: false,
-            glasanoo: false,
+            notifikacije: false,
             porukaGlasano: "",
             successGlasano: "",
         };
@@ -441,6 +451,7 @@ export default {
     mounted() {
         this.getAnketa();
         this.getPredmeti();
+        this.sakrijNotifikaciju();
     },
 
     methods: {
@@ -478,6 +489,7 @@ export default {
                 .post("/dodajAnketu", Data)
                 .then((response) => {
                     this.poruka = response.data.poruka;
+                    this.notifikacije = true;
                     this.ankete.push(this.anketa);
                     (this.anketa = {
                         naziv: "",
@@ -506,6 +518,8 @@ export default {
             axios
                 .post(`/delete/${id} `)
                 .then((response) => {
+                    this.poruka = response.data.poruka;
+                    this.notifikacije = true;
                     this.ankete = this.ankete.filter(
                         (anketaa) => anketaa.id !== id
                     );
@@ -536,6 +550,8 @@ export default {
                     pitanje3: this.form.pitanje3,
                 })
                 .then((response) => {
+                    this.poruka = response.data.poruka;
+                    this.notifikacije = true;
                     const updatedAnketa = response.data.anketa;
                     console.log(updatedAnketa);
                     const index = this.ankete.findIndex(
@@ -584,11 +600,13 @@ export default {
             axios
                 .post("/dodajOdgovor", Odgovor)
                 .then((response) => {
-                    this.porukaGlasano = response.data.poruka;
+                    this.poruka = response.data.poruka;
 
+                    this.poruka = response.data.poruka;
+
+                    this.notifikacije = true;
                     const key = `glasano_${anketaId}`;
                     localStorage.setItem(key, "true"); // Sprema vrijednost za ovu anketu u localStorage
-
                     this.checkIfGlasano(anketaId);
                 })
                 .catch((error) => {
@@ -605,6 +623,12 @@ export default {
 
             return glasano === "true";
         },
+
+        sakrijNotifikaciju() {
+            setTimeout(() => {
+                this.notifikacije = false;
+            }, 3000);
+        },
     },
 };
 </script>
@@ -619,5 +643,9 @@ export default {
     position: relative;
     top: 50px;
     width: 50%;
+}
+
+.Notti {
+    width: 15%;
 }
 </style>

@@ -26,11 +26,11 @@ class AnswerController extends Controller
 
         if ($existingAnswer) {
             // Ako korisnik već glasa, onemogućite unos
-            return response()->json(['poruka' => 'Već ste glasali za ovu anketu.']);
+            return response()->json(['poruka' => 'Samo jednom mozete glasovati']);
         }else{
             $odgovor = new Answer();
             $odgovor->create($data);
-            return response()->json(['poruka' => 'Glasano']);
+            return response()->json(['poruka' => 'Uspjesno ste glasovali']);
         }
 
 
