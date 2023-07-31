@@ -80,6 +80,12 @@
                                         id="recipient-name"
                                         v-model="anketa.naziv"
                                     />
+                                    <p
+                                        v-if="errors.naziv"
+                                        class="text-danger"
+                                    >
+                                        {{ errors.naziv[0] }}
+                                    </p>
                                 </div>
                                 <div class="mb-3">
                                     <label
@@ -92,6 +98,12 @@
                                         id="message-text"
                                         v-model="anketa.opis"
                                     ></textarea>
+                                    <p
+                                        v-if="errors.opis"
+                                        class="text-danger"
+                                    >
+                                        {{ errors.opis[0] }}
+                                    </p>
                                 </div>
                                 <div>
                                     <label for="category">Predmet:</label>
@@ -125,6 +137,12 @@
                                         id="recipient-name"
                                         v-model="anketa.pitanje1"
                                     />
+                                    <p
+                                        v-if="errors.pitanje1"
+                                        class="text-danger"
+                                    >
+                                        {{ errors.pitanje1[0] }}
+                                    </p>
                                 </div>
                                 <div class="mb-3">
                                     <label
@@ -138,6 +156,12 @@
                                         id="recipient-name"
                                         v-model="anketa.pitanje2"
                                     />
+                                    <p
+                                        v-if="errors.pitanje2"
+                                        class="text-danger"
+                                    >
+                                        {{ errors.pitanje2[0] }}
+                                    </p>
                                 </div>
                                 <div class="mb-3">
                                     <label
@@ -151,6 +175,7 @@
                                         id="recipient-name"
                                         v-model="anketa.pitanje3"
                                     />
+                                    <p class="text-warning mt-2">Odgovor tri nije obavezan. </p>
                                 </div>
                                 <button
                                     type="submit"
@@ -190,7 +215,7 @@
     </div>
 
     <!-- ANKETE -->
-    <div class="container">
+    <div class="container" v-if="isLoggedIn">
         <div class="d-flex flex-column mt-5 p-5">
             <div
                 class="border w-100 p-5 mt-3 bg-light"
@@ -238,7 +263,7 @@
                             {{ anketa.pitanje2 }}
                         </label>
                     </div>
-                    <div class="form-check">
+                    <div class="form-check" v-if="anketa.pitanje3">
                         <input
                             class="form-check-input"
                             type="radio"
@@ -417,6 +442,12 @@
             </div>
         </div>
     </div>
+    <div class="container" v-else>
+        <div class="alert alert-info ms-5 text-center w-50 mt-5 regiNoti">
+            Registrirajte se ili se prijavite kako bi mogli dodavati anketu ili
+            glasovati
+        </div>
+    </div>
 </template>
 
 <script>
@@ -479,7 +510,6 @@ export default {
     mounted() {
         this.getAnketa();
         this.getPredmeti();
-
     },
 
     methods: {
@@ -663,8 +693,6 @@ export default {
 
             return glasano === "true";
         },
-
-
     },
 };
 </script>
@@ -683,5 +711,10 @@ export default {
 
 .Notti {
     width: 15%;
+}
+
+.regiNoti {
+    position: relative;
+    left: 17rem;
 }
 </style>

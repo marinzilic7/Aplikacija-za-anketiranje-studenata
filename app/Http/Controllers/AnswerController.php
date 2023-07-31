@@ -25,7 +25,7 @@ class AnswerController extends Controller
         ->first();
 
         if ($existingAnswer) {
-            // Ako korisnik već glasa, onemogućite unos
+
             return response()->json(['poruka' => 'Samo jednom mozete glasovati']);
         }else{
             $odgovor = new Answer();

@@ -5,7 +5,7 @@ import { RouterLink, RouterView } from "vue-router";
 <template>
     <nav class="navbar navbar-expand-lg bg-dark col-sm-12 col-md-12 shadow-lg">
         <div class="container-fluid">
-            <a class="navbar-brand text-light" href="#">Anketa</a>
+            <a class="navbar-brand text-light" href="#">AnketaApp</a>
             <button
                 class="navbar-toggler"
                 type="button"
