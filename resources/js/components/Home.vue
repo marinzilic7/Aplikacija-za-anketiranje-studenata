@@ -9,6 +9,25 @@
             </div>
         </div>
     </div>
+
+    <div
+        class="toast align-items-center"
+        role="alert"
+        aria-live="assertive"
+        aria-atomic="true"
+        ref="myToast"
+    >
+        <div class="d-flex">
+            <div class="toast-body">{{ poruka }}</div>
+            <button
+                type="button"
+                class="btn-close me-2 m-auto"
+                data-bs-dismiss="toast"
+                aria-label="Close"
+            ></button>
+        </div>
+    </div>
+
     <!-- BUTTON ZA DODAVANJE ANKETE  -->
     <div class="container" v-if="isLoggedIn">
         <div class="row d-flex justify-content-center mt-5">
@@ -155,12 +174,21 @@
             </div>
         </div>
     </div>
+
     <div
-        class="alert alert-success position-fixed me-3 end-0 Notti"
+        class="toast fade show position-fixed top-0 end-0 z-1 mt-5 me-2"
+        style="margin-top: 70px !important"
+        role="alert"
+        aria-live="assertive"
+        aria-atomic="true"
+        data-bs-autohide="false"
         v-if="notifikacije"
     >
-        {{ poruka }}
+        <div class="toast-body bg-primary text-light">
+            <strong>{{ poruka }}</strong>
+        </div>
     </div>
+
     <!-- ANKETE -->
     <div class="container">
         <div class="d-flex flex-column mt-5 p-5">
@@ -451,7 +479,7 @@ export default {
     mounted() {
         this.getAnketa();
         this.getPredmeti();
-        this.sakrijNotifikaciju();
+
     },
 
     methods: {
@@ -490,6 +518,9 @@ export default {
                 .then((response) => {
                     this.poruka = response.data.poruka;
                     this.notifikacije = true;
+                    setTimeout(() => {
+                        this.notifikacije = false;
+                    }, 3000);
                     this.ankete.push(this.anketa);
                     (this.anketa = {
                         naziv: "",
@@ -520,6 +551,9 @@ export default {
                 .then((response) => {
                     this.poruka = response.data.poruka;
                     this.notifikacije = true;
+                    setTimeout(() => {
+                        this.notifikacije = false;
+                    }, 3000);
                     this.ankete = this.ankete.filter(
                         (anketaa) => anketaa.id !== id
                     );
@@ -552,6 +586,10 @@ export default {
                 .then((response) => {
                     this.poruka = response.data.poruka;
                     this.notifikacije = true;
+
+                    setTimeout(() => {
+                        this.notifikacije = false;
+                    }, 3000);
                     const updatedAnketa = response.data.anketa;
                     console.log(updatedAnketa);
                     const index = this.ankete.findIndex(
@@ -603,8 +641,10 @@ export default {
                     this.poruka = response.data.poruka;
 
                     this.poruka = response.data.poruka;
-
                     this.notifikacije = true;
+                    setTimeout(() => {
+                        this.notifikacije = false;
+                    }, 3000);
                     const key = `glasano_${anketaId}`;
                     localStorage.setItem(key, "true"); // Sprema vrijednost za ovu anketu u localStorage
                     this.checkIfGlasano(anketaId);
@@ -624,11 +664,7 @@ export default {
             return glasano === "true";
         },
 
-        sakrijNotifikaciju() {
-            setTimeout(() => {
-                this.notifikacije = false;
-            }, 3000);
-        },
+
     },
 };
 </script>
