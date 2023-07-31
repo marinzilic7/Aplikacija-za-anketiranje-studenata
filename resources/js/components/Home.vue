@@ -75,27 +75,25 @@
                                     ></textarea>
                                 </div>
                                 <div>
-                                            <label for="category"
-                                                >Predmet:</label
-                                            >
-                                            <select
-                                                id="category"
-                                                class="ms-2"
-                                                v-model="anketa.category_id"
-                                                required
-                                            >
-                                                <option value="">
-                                                    Odaberi predmet
-                                                </option>
-                                                <option
-                                                    v-for="predmet in predmeti"
-                                                    :value="predmet.id"
-                                                    :key="predmet.id"
-                                                >
-                                                    {{ predmet.name }}
-                                                </option>
-                                            </select>
-                                        </div>
+                                    <label for="category">Predmet:</label>
+                                    <select
+                                        id="category"
+                                        class="ms-2"
+                                        v-model="anketa.category_id"
+                                        required
+                                    >
+                                        <option value="">
+                                            Odaberi predmet
+                                        </option>
+                                        <option
+                                            v-for="predmet in predmeti"
+                                            :value="predmet.id"
+                                            :key="predmet.id"
+                                        >
+                                            {{ predmet.name }}
+                                        </option>
+                                    </select>
+                                </div>
                                 <div class="mb-3">
                                     <label
                                         for="recipient-name"
@@ -162,60 +160,73 @@
     <div class="container">
         <div class="d-flex flex-column mt-5 p-5">
             <div
-                class="border w-100 p-5 mt-3"
+                class="border w-100 p-5 mt-3 bg-light"
                 v-for="anketa in ankete"
                 :key="anketa.id"
             >
                 <h4>{{ anketa.naziv }}</h4>
 
                 <h4 class="fw-bold text-center mt-3"></h4>
-                <form class="px-4" action="">
+                <form
+                    class="px-4"
+                    @submit.prevent="addAnswer(anketa.id)"
+                    method="POST"
+                >
+                    <input type="hidden" v-model="this.POST" />
+                    <input type="hidden" name="" v-model="this.csrfToken" />
+
                     <p class="fw-bold">{{ anketa.opis }}</p>
                     <p class="fw-bold">Predmet: {{ anketa.category.name }}</p>
                     <div class="form-check">
                         <input
                             class="form-check-input"
-                            type="checkbox"
-                            value=""
-                            id="flexCheckDefault"
+                            type="radio"
+                            name="flexRadioDefault"
+                            :value="anketa.pitanje1"
+                            id="pitanje1"
+                            v-model="odgovor.pitanje1"
                         />
-                        <label class="form-check-label" for="flexCheckDefault">
+                        <label class="form-check-label" for="pitanje1">
                             {{ anketa.pitanje1 }}
                         </label>
                     </div>
-
-                    <!-- Checked checkbox -->
                     <div class="form-check">
                         <input
                             class="form-check-input"
-                            type="checkbox"
-                            value=""
-                            id="flexCheckDefault2"
+                            type="radio"
+                            name="flexRadioDefault"
+                            :value="anketa.pitanje2"
+                            id="pitanje2"
+                            v-model="odgovor.pitanje2"
                         />
-                        <label class="form-check-label" for="flexCheckDefault2">
+                        <label class="form-check-label" for="pitanje2">
                             {{ anketa.pitanje2 }}
                         </label>
                     </div>
-
-                    <!-- Checked checkbox -->
                     <div class="form-check">
                         <input
                             class="form-check-input"
-                            type="checkbox"
-                            value=""
-                            id="flexCheckDefault3"
+                            type="radio"
+                            name="flexRadioDefault"
+                            :value="anketa.pitanje3"
+                            id="pitanje3"
+                            v-model="odgovor.pitanje3"
                         />
-                        <label class="form-check-label" for="flexCheckDefault3">
+                        <label class="form-check-label" for="pitanje3">
                             {{ anketa.pitanje3 }}
                         </label>
                     </div>
+                    <div class="form-check"></div>
+                    <button type="submit" class="btn btn-sm btn-primary">
+                        Submit
+                    </button>
                 </form>
 
                 <div class="card-footer text-end">
-                    <p class="text-start text-success Created">{{ anketa.created_at }}</p>
-                    <button type="button" class="btn btn-sm btn-primary">
-                        Submit
-                    </button>
+                    <p class="text-start text-success Created">
+                        {{ anketa.created_at }}
+                    </p>
+
                     <button
                         type="button"
                         class="btn btn-sm btn-warning ms-2"
@@ -372,7 +383,7 @@ export default {
                 pitanje1: "",
                 pitanje2: "",
                 pitanje3: "",
-                category_id:""
+                category_id: "",
             },
             form: {
                 naziv: "",
@@ -382,12 +393,19 @@ export default {
                 pitanje3: "",
             },
 
+            odgovor: {
+                pitanje1: "",
+                pitanje2: "",
+                pitanje3: "",
+                anketa_id: "",
+            },
+
             csrfToken: "",
             POST: "",
             errors: {},
             poruka: "",
             currentanketaId: null,
-            predmeti:[]
+            predmeti: [],
         };
     },
     computed: {
@@ -437,7 +455,7 @@ export default {
                 pitanje1: this.anketa.pitanje1,
                 pitanje2: this.anketa.pitanje2,
                 pitanje3: this.anketa.pitanje3,
-                category_id : this.anketa.category_id
+                category_id: this.anketa.category_id,
             };
             axios.defaults.headers.common["X-CSRF-TOKEN"] = this.csrfToken;
             axios
@@ -451,7 +469,7 @@ export default {
                         pitanje1: "",
                         pitanje2: "",
                         pitanje3: "",
-                        category_id:"",
+                        category_id: "",
                     }),
                         (this.errors = {});
                     this.getAnketa();
@@ -533,6 +551,33 @@ export default {
                     console.log(error);
                 });
         },
+
+        addAnswer(anketaId) {
+            this.odgovor.anketa_id = anketaId;
+            const Odgovor = {
+                odgovor:
+                    this.odgovor.pitanje1 ||
+                    this.odgovor.pitanje2 ||
+                    this.odgovor.pitanje3,
+                anketa_id: this.odgovor.anketa_id,
+            };
+
+            console.log(Odgovor.odgovor);
+
+            axios.defaults.headers.common["X-CSRF-TOKEN"] = this.csrfToken;
+            axios
+                .post("/dodajOdgovor", Odgovor)
+                .then((response) => {
+                    this.poruka = response.data.poruka;
+                })
+                .catch((error) => {
+                    if (error.response && error.response.status === 422) {
+                        this.errors = error.response.data.errors;
+                    } else {
+                        console.log(error);
+                    }
+                });
+        },
     },
 };
 </script>
@@ -543,10 +588,9 @@ export default {
     position: absolute;
 }
 
-.Created{
+.Created {
     position: relative;
-    top:50px;
-    width:50%;
-
+    top: 50px;
+    width: 50%;
 }
 </style>

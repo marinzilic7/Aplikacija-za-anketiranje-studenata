@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AnketaController;
+use App\Http\Controllers\AnswerController;
 use App\Http\Controllers\CategoryController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
@@ -23,6 +24,10 @@ Route::post('/urediAnketu/{id}',[AnketaController::class,'urediAnketu']);
 /* Predmeti */
 
 Route::get('/getPredmeti',[CategoryController::class,'getPredmeti']);
+
+/* Odgovor */
+
+Route::post('/dodajOdgovor',[AnswerController::class,'dodajOdgovor']);
 
 Route::get('/{any}', function () {
     return view('welcome');
